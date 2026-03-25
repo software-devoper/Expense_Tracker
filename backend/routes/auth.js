@@ -37,6 +37,7 @@ router.post('/login', async (req, res) => {
     const { password } = req.body;
     const email = req.body.email.toLowerCase().trim();
     const user = await User.findOne({ email });
+    console.log(`Login attempt for ${email}. User found: ${!!user}, isVerified: ${user?.isVerified}`);
 
     if (user && (await user.matchPassword(password))) {
       if (!user.isVerified) {
@@ -62,12 +63,15 @@ router.get('/verify/:token', async (req, res) => {
   try {
     const user = await User.findOne({ verificationToken: req.params.token });
     if (!user) {
+      console.log(`Verification failed for token: ${req.params.token.substring(0, 10)}... (User not found)`);
       return res.status(400).json({ message: 'Invalid or expired verification token.' });
     }
 
+    console.log(`Verifying user: ${user.email}`);
     user.isVerified = true;
     user.verificationToken = undefined;
     await user.save();
+    console.log(`User ${user.email} is now verified: ${user.isVerified}`);
 
     res.json({ message: 'Email verified successfully! You can now log in.' });
   } catch (error) {

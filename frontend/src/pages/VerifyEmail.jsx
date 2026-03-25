@@ -11,6 +11,7 @@ const VerifyEmail = () => {
   useEffect(() => {
     const verifyToken = async () => {
       try {
+        console.log('Verifying with API:', api.defaults.baseURL);
         const res = await api.get(`/auth/verify/${token}`);
         setStatus('success');
         setMessage(res.data.message);
