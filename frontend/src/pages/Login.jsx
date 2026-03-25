@@ -7,17 +7,21 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setLoading(true);
       setError('');
       await login(email, password);
       navigate('/');
     } catch (err) {
       setError(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -59,10 +63,13 @@ const Login = () => {
 
           {error && <p className="error-text" style={{ marginBottom: '1rem', textAlign: 'center' }}>{error}</p>}
 
-          <button type="submit" className="btn-primary" style={{ width: '100%', marginBottom: '1.5rem' }}>
-            Sign In
+          <button type="submit" className="btn-primary" style={{ width: '100%', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }} disabled={loading}>
+            {loading ? (
+              <div style={{ width: '20px', height: '20px', border: '2px solid rgba(255,255,255,0.3)', borderTopColor: 'white', borderRadius: '50%', animation: 'spin 0.6s linear infinite' }} />
+            ) : 'Sign In'}
           </button>
         </form>
+        <style>{`@keyframes spin { 100% { transform: rotate(360deg); } }`}</style>
 
         <p style={{ textAlign: 'center', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
           Don't have an account? <Link to="/register" style={{ color: 'var(--accent)', textDecoration: 'none', fontWeight: '600' }}>Sign up</Link>

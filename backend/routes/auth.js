@@ -13,7 +13,8 @@ const generateToken = (id) => {
 // @route POST /api/auth/register
 router.post('/register', async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, password } = req.body;
+    const email = req.body.email.toLowerCase().trim();
     let user = await User.findOne({ email });
     if (user) return res.status(400).json({ message: 'User already exists' });
 
@@ -33,7 +34,8 @@ router.post('/register', async (req, res) => {
 // @route POST /api/auth/login
 router.post('/login', async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { password } = req.body;
+    const email = req.body.email.toLowerCase().trim();
     const user = await User.findOne({ email });
 
     if (user && (await user.matchPassword(password))) {
