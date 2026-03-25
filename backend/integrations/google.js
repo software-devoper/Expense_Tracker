@@ -111,6 +111,7 @@ const sendVerificationEmail = async (toEmail, name, token) => {
 
   try {
     const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+    console.log(`Generating verification link with FRONTEND_URL: ${frontendUrl}`);
     const verificationUrl = `${frontendUrl}/verify/${token}`;
     await brevoClient.transactionalEmails.sendTransacEmail({
       subject: 'Verify Your Expensify AI Account',
