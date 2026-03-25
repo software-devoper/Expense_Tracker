@@ -30,7 +30,8 @@ const VerifyEmail = () => {
           <>
             <div style={{ width: '40px', height: '40px', border: '3px solid var(--border)', borderTopColor: 'var(--accent)', borderRadius: '50%', margin: '0 auto 1.5rem', animation: 'spin 1s linear infinite' }} />
             <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem', color: 'var(--text-primary)' }}>Verifying Email...</h2>
-            <p style={{ color: 'var(--text-secondary)' }}>Please wait while we confirm your address.</p>
+            <p style={{ color: 'var(--text-secondary)' }}>Contacting: {api.defaults.baseURL}</p>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.8rem', marginTop: '0.5rem' }}>Token: ${token?.substring(0, 10)}...</p>
           </>
         )}
 
