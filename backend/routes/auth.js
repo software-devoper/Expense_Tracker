@@ -61,17 +61,19 @@ router.post('/login', async (req, res) => {
 // @route GET /api/auth/verify/:token
 router.get('/verify/:token', async (req, res) => {
   try {
-    const user = await User.findOne({ verificationToken: req.params.token });
+    // Using findOneAndUpdate to bypass any pre-save logic issues and ensure persistence
+    const user = await User.findOneAndUpdate(
+      { verificationToken: req.params.token },
+      { $set: { isVerified: true }, $unset: { verificationToken: "" } },
+      { new: true }
+    );
+
     if (!user) {
-      console.log(`Verification failed for token: ${req.params.token.substring(0, 10)}... (User not found)`);
+      console.log(`Verification failed for token: ${req.params.token.substring(0, 10)}... (Token not found or already verified)`);
       return res.status(400).json({ message: 'Invalid or expired verification token.' });
     }
 
-    console.log(`Verifying user: ${user.email}`);
-    user.isVerified = true;
-    user.verificationToken = undefined;
-    await user.save();
-    console.log(`User ${user.email} is now verified: ${user.isVerified}`);
+    console.log(`User ${user.email} successfully verified: ${user.isVerified}`);
 
     res.json({ message: 'Email verified successfully! You can now log in.' });
   } catch (error) {
